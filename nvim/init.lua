@@ -44,6 +44,10 @@ require("lazy").setup({
     {
         "numToStr/Comment.nvim",
         opts = {}
+    },
+
+    {
+        "ahmedkhalf/project.nvim",
     }
 })
 
@@ -55,6 +59,7 @@ require'nvim-treesitter.configs'.setup {
     highlight = { enable = true },
     indent = { enable = true }
 }
+
 
 -- LSP
 local lspconfig = require("lspconfig")
@@ -114,8 +119,12 @@ require('nvim-treesitter.configs').setup {
   highlight = { enable = true },
 }
 
-require("nvim-tree").setup()
-vim.keymap.set('n', '<C-n>', ':NvimTreeToggle<CR>')
+require("nvim-tree").setup({
+  update_focused_file = {
+    enable = true,
+    update_cwd = true,
+  },
+})
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
@@ -157,7 +166,7 @@ vim.keymap.set('n', '<C-p>', ":vsp<CR>", { noremap = true, silent = true })
 vim.keymap.set('n', 'L', ":bn<CR>", { noremap = true, silent = true })
 vim.keymap.set('n', 'J', ":bp<CR>", { noremap = true, silent = true })
 vim.keymap.set('n', 'G', telescope.git_status, { noremap = true, silent = true })
-
+vim.keymap.set('n', 'Q', ":Telescope projects<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = { "*.c", "*.h", "*.cpp", "*.hpp" },
@@ -210,4 +219,13 @@ require('lualine').setup {
     }
   }
 }
+
+require("project_nvim").setup({
+    detection_methods = { "pattern" },
+    patterns = { ".git" },
+    scope_chdir = 'win', 
+})
+
+require('telescope').load_extension('projects')
+
 
